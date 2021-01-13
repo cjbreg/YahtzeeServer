@@ -1,26 +1,24 @@
-
-# Travis CI Java documentation can be found in:
-# https://docs.travis-ci.com/user/languages/java/
-
 language: java
-
 jdk:
-  - oraclejdk11
-
+- oraclejdk11
 services:
-  - docker
-
+- docker
 env:
+  matrix:
   - MAVEN_VERSION=3.3.9
-
+  global:
+    secure: I02l5xDRjMDZ/2X/ugejDutLmb/GqbyXAHJn28nbFFSvatDaBnC0WuDQDPzX4e2pNPdJjrEZdgW/eNW9qeLEwNbhFuuHYQ0UsAUs1wzfJH5avY/UObBCdB+P7NAaAXRwbjZAvUbc9xAM3GsLmP0w96xh8urkhdmO7iTHN10Vs0Z2aorDjKf6VNv6OFpRY7UHHbkeQjmOhakfGL8WLaqszjUeevgKZWHm5K0yKP6neA02k9DjbUt44Wu3VpiswIZKppngIX4npyIwYf0yzZKqdWVxJN7UrfLcBq5eVB2JlASBrLEoqijjIPXVM9qMlefVbnB7o3SVrP4XCY1c3wb6WOeQCBTKwBhRRjRiUQxB2Pc6ZlamRedaQf+PBTFMsKnOcF5oazcZO5/7pbX21WlZu2FHD3FzBk7lENXu05uhBDVoULiNZ6pwmsBvRaaJjMxsT3ihF1o1W1QNrvTLpmRtXXsyFBUnyOW8Y3L6OP8ztYcZjFWJ5GqZtORTIqkR0SoHRodR96kTFCLWCHtNvaLSJwaO9HVo0w9GQ/bYMwHoPq8fvy9++mkkCeN1WPLdz+0MJzOk5R+mOnJLZNNixIP4kAQY3cu6tIQlQBQwaQEnLUxorqPNdftnM9b6bbl0tafLruI8AuogCeSLuqCUAXwf8dVQ8N1ixtKcSUl5ZmjmIzg=
 addons:
   sonarcloud:
-    organization: "coenbreg1224" # the key of the org you chose at step #3
-
+    organization: coenbreg1224
+    token: I02l5xDRjMDZ/2X/ugejDutLmb/GqbyXAHJn28nbFFSvatDaBnC0WuDQDPzX4e2pNPdJjrEZdgW/eNW9qeLEwNbhFuuHYQ0UsAUs1wzfJH5avY/UObBCdB+P7NAaAXRwbjZAvUbc9xAM3GsLmP0w96xh8urkhdmO7iTHN10Vs0Z2aorDjKf6VNv6OFpRY7UHHbkeQjmOhakfGL8WLaqszjUeevgKZWHm5K0yKP6neA02k9DjbUt44Wu3VpiswIZKppngIX4npyIwYf0yzZKqdWVxJN7UrfLcBq5eVB2JlASBrLEoqijjIPXVM9qMlefVbnB7o3SVrP4XCY1c3wb6WOeQCBTKwBhRRjRiUQxB2Pc6ZlamRedaQf+PBTFMsKnOcF5oazcZO5/7pbX21WlZu2FHD3FzBk7lENXu05uhBDVoULiNZ6pwmsBvRaaJjMxsT3ihF1o1W1QNrvTLpmRtXXsyFBUnyOW8Y3L6OP8ztYcZjFWJ5GqZtORTIqkR0SoHRodR96kTFCLWCHtNvaLSJwaO9HVo0w9GQ/bYMwHoPq8fvy9++mkkCeN1WPLdz+0MJzOk5R+mOnJLZNNixIP4kAQY3cu6tIQlQBQwaQEnLUxorqPNdftnM9b6bbl0tafLruI8AuogCeSLuqCUAXwf8dVQ8N1ixtKcSUl5ZmjmIzg=
 install:
-  - "mvn -N io.takari:maven:wrapper -Dmaven=${MAVEN_VERSION}"
-# - "./mvnw --show-version --errors --batch-mode test-compile dependency:go-offline"
-
+- mvn -N io.takari:maven:wrapper -Dmaven=${MAVEN_VERSION}
 script:
-  # other script steps might be done before running the actual analysis
-  - mvn test -B
+- mvn test -B
+  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=cjbreg_YahtzeeServer
+deploy:
+  provider: heroku
+  api_key:
+    secure: I+kLHFcoYTmJQjRqorBryQanCKIG/rXUZaQDcpoRHel6RNhiexbK/wYA2qKsub/U/9jb8DhOpZect0AeYbKKl4avE4TJJLYoeIY4X/QL0IP1rzUL80uGlNgPa9pqG5DSIWC3/WWkDlJ/iF3mfhA1yhY9wDfzV2mkPJ3F+3Q1Gfbc6u5IOfDUUxzkmDD//mrQRSr1OfBGfeEMyqhvDHcO7r/Voj3NrGIZG1U1DUGPOyQ91dMTWrVpnGx1TCLDi+1EAzUexiPc5qMJiF0T5zSTvPSEg7ISc0ctsUqoUwitxlNlMRCPFjJsjL77/RKZ0JYjzGxchfWMkALuAh/NzpFv22mmeeliSu9PUrFNoYa+mJ4SXWo3UUeTzcm6siqkyE4Ti58w61dnT9rmrY3RXvM+U+y9PIB4JjDHNuQTVdzi3I86RBDBoKPjBVrezByFYWsR9KCvWJeoG3R+I4lmI1LY88r4ogdXaeDmlSaFyxpwx1BF+QhoUV/PiI2lqipTdw+npr1bJllNu6a211JazvGOk4TOrSynvhE9SAK+Ko06udmJQs7321qxS486uDfOxkFT1MweNHWahx4tumaOYN8Yg4f+ANzEc1iY7wb3abI2x8UWHiGVBwljXIVWORVheDUu0MF3JLErpbmCIoocKZrzmYBO0rFgw+upezLNNBpdKZA=
