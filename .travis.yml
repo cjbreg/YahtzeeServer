@@ -1,0 +1,26 @@
+
+# Travis CI Java documentation can be found in:
+# https://docs.travis-ci.com/user/languages/java/
+
+language: java
+
+jdk:
+  - oraclejdk11
+
+services:
+  - docker
+
+env:
+  - MAVEN_VERSION=3.3.9
+
+addons:
+  sonarcloud:
+    organization: "coenbreg1224" # the key of the org you chose at step #3
+
+install:
+  - "mvn -N io.takari:maven:wrapper -Dmaven=${MAVEN_VERSION}"
+# - "./mvnw --show-version --errors --batch-mode test-compile dependency:go-offline"
+
+script:
+  # other script steps might be done before running the actual analysis
+  - mvn clean install sonar:sonar -Pcoverage -Dsonar.projectKey=RoyAppeldoorn_snake-server
