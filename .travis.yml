@@ -17,4 +17,5 @@ deploy:
   app: yahtzee-server
   on:
     repo: cjbreg/YahtzeeServer
+    branch: main
   skip_cleanup: 'true'
