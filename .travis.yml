@@ -18,7 +18,7 @@ install:
 script:
 - mvn test -B
 # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
-# - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=cjbreg_YahtzeeServer
+- mvn clean install sonar:sonar -Pcoverage -Dsonar.projectKey=cjbreg_YahtzeeServer
 deploy:
   provider: heroku
   api_key:
