@@ -1,7 +1,6 @@
 package nl.fhict.s3.yahtzeeserver.yahtzeeServer.serverside;
 
 import nl.fhict.s3.yahtzeeserver.yahtzeeClient.yahtzeeGame.User;
-import nl.fhict.s3.yahtzeeserver.yahtzeeServer.logging.Logging;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
